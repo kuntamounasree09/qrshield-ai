@@ -1,0 +1,130 @@
+We are going to build a complete hackathon project called QRShield AI.
+
+IMPORTANT: DO NOT START CODING YET.
+
+First analyze the complete project requirements below and create a detailed implementation plan.
+
+Project:
+QRShield AI — AI-Powered QR Code Cyber Risk Analyzer
+
+Problem:
+QR codes are widely used for payments, college registrations, job applications, advertisements, emails, posters and other activities. Users normally cannot see what is hidden inside a QR code before interacting with it. Attackers can abuse QR codes to redirect users to phishing websites, fake login pages, fake job portals, payment scams, impersonation websites, malicious downloads and suspicious redirects.
+
+QRShield AI acts as a cybersecurity layer BEFORE the user interacts with a QR code.
+
+Core workflow:
+
+QR image upload
+→ QR detection
+→ QR decoding
+→ content classification
+→ cybersecurity analysis
+→ deterministic risk scoring
+→ AI threat analysis
+→ explainable result
+→ safety recommendation
+→ database storage
+→ scan history
+
+The application must be a REAL working product, not a mockup.
+
+Core MVP features:
+
+1. QR image upload
+2. QR decoding
+3. Content classification:
+   - URL
+   - UPI payment
+   - phone
+   - email
+   - plain text
+   - unknown
+4. URL security analysis
+5. Suspicious-domain detection
+6. Brand impersonation detection
+7. Typosquatting detection
+8. Safe redirect analysis where possible
+9. Optional threat-intelligence integration
+10. Deterministic risk engine producing 0–100 score
+11. AI threat classification and explanation
+12. Context-specific safety recommendations
+13. English, Telugu and Hindi support
+14. PostgreSQL scan history
+15. Professional responsive frontend
+16. Secure handling of untrusted URLs and uploaded files
+17. Automated testing
+18. Documentation
+
+Important cybersecurity principle:
+
+The application must NEVER blindly open or execute QR destinations.
+
+Do not fabricate threat intelligence, AI results or risk scores.
+
+The deterministic security analysis must continue working even if the LLM or optional threat-intelligence API is unavailable.
+
+Recommended stack:
+
+Frontend:
+Next.js + TypeScript + Tailwind CSS
+
+Backend:
+Python + FastAPI
+
+QR processing:
+OpenCV and an appropriate QR decoding library
+
+Database:
+PostgreSQL
+
+AI:
+LLM API through environment variables
+
+The application must use environment variables for secrets and create a .env.example file.
+
+Security requirements include:
+
+- file validation
+- file-size limits
+- input validation
+- URL scheme validation
+- SSRF protection
+- private/local IP blocking
+- redirect limits
+- request timeouts
+- rate limiting
+- CORS
+- secure error handling
+- no secret exposure
+
+The final application should have:
+
+/
+ /scan
+ /result/[id]
+ /history
+ /settings
+
+Before coding, provide:
+
+1. Complete architecture
+2. Folder structure
+3. Database schema
+4. API endpoints
+5. Frontend pages/components
+6. Security architecture
+7. AI architecture
+8. Risk-scoring design
+9. Testing strategy
+10. Dependencies
+11. Environment variables
+12. Implementation milestones
+13. Estimated complexity of each milestone
+14. Which features are MVP and which are optional
+
+IMPORTANT:
+Do not add unnecessary technologies or features.
+
+Our main goal is to FINISH a complete working project rather than build a huge unfinished system.
+
+After presenting the plan, WAIT for my approval before starting implementation.
