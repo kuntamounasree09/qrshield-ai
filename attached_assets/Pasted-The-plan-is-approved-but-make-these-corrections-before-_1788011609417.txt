@@ -1,0 +1,154 @@
+The plan is approved, but make these corrections before implementation.
+
+1. IMPORTANT: QRShield AI is being built from scratch.
+
+Your plan says:
+"Extend the existing Express API service"
+and
+"existing session secret"
+
+There is no existing QRShield backend, API service, session system, or secret.
+
+Build the required backend and supporting services from scratch within this project.
+
+Do NOT assume that an existing API, database schema, authentication system, session secret, generated API client, UI primitives, or backend libraries already exist.
+
+2. Keep the architecture simple and finishable.
+
+Use:
+
+Frontend:
+React + Vite + TypeScript + React Router + Tailwind CSS
+
+Backend:
+Express + TypeScript
+
+Database:
+PostgreSQL + Drizzle ORM
+
+QR decoding:
+A reliable server-side QR decoding/image-processing solution.
+
+AI:
+Optional LLM integration through environment variables.
+
+Threat intelligence:
+Optional and must never be required for the MVP.
+
+Do NOT introduce FastAPI, microservices, Redis, queues, Docker, object storage, authentication, or other infrastructure unless genuinely required.
+
+3. IMPORTANT MVP PRINCIPLE:
+
+The deterministic security analyzer must work WITHOUT an AI API key and WITHOUT a threat-intelligence API key.
+
+The minimum complete application must therefore work locally using only:
+
+- Node.js
+- PostgreSQL
+- project dependencies
+
+AI and threat intelligence should enhance the result but must never be required to demonstrate the core product.
+
+4. Keep the current security architecture.
+
+Especially preserve:
+
+- no automatic opening of decoded URLs
+- no browser navigation to QR destinations
+- no iframe rendering
+- SSRF protection
+- private/local IP blocking
+- redirect limits
+- timeout protection
+- file signature validation
+- upload size limits
+- XSS-safe display of decoded content
+- rate limiting
+- secure error handling
+- no secret exposure
+
+5. Keep the deterministic risk engine as the authority for the numeric score.
+
+AI may explain/classify the findings but must NOT modify the deterministic score.
+
+6. For the first implementation, prioritize these features in exactly this order:
+
+A. Application foundation
+B. PostgreSQL + database schema
+C. QR upload and decoding
+D. Content classification
+E. Deterministic URL/security analyzer
+F. Risk scoring
+G. Result page
+H. Scan history
+I. AI explanation
+J. Optional threat intelligence
+K. Multilingual support
+L. Security hardening
+M. Automated testing
+N. Documentation
+
+Do not spend excessive time on visual polish before the complete scan pipeline works.
+
+7. Before implementing each milestone, briefly state what you are about to build.
+
+After completing each milestone:
+
+- run the application
+- run relevant tests
+- fix errors
+- verify the feature actually works
+- create a checkpoint
+
+Do not mark a milestone complete if it only has placeholder/mock functionality.
+
+8. The final project must be runnable locally in VS Code after we export/clone the repository from Replit.
+
+Therefore create:
+
+.env.example
+README.md
+database migration/setup instructions
+clear npm scripts
+clear local development instructions
+
+Do not depend on Replit-only functionality for the core application.
+
+9. For the risk score, use the score bands already defined in the plan:
+
+0–19 = Safe
+20–39 = Low
+40–59 = Medium
+60–79 = High
+80–100 = Critical
+
+Each score contribution must be traceable to an actual security finding.
+
+10. IMPORTANT ABOUT SECURITY CLAIMS:
+
+QRShield AI is a risk-analysis tool, not a perfect malware detector.
+
+Never claim:
+"This QR is definitely safe"
+or
+"This QR is definitely malicious"
+
+unless there is authoritative evidence supporting that statement.
+
+Prefer:
+"Low risk based on detected signals"
+"Potentially suspicious"
+"High-risk indicators detected"
+"Insufficient evidence"
+
+11. Do NOT create fake/demo API responses for production functionality.
+
+Demo/test data may exist separately and must be clearly labeled TEST/DEMO.
+
+12. Now update the implementation plan to reflect these corrections.
+
+Then begin Milestone 1.
+
+Do not ask me to manually create backend files or database tables if you can create them yourself.
+
+Build the project completely and incrementally.

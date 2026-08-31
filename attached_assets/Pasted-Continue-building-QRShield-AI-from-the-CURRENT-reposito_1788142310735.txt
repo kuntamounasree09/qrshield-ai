@@ -1,0 +1,258 @@
+Continue building QRShield AI from the CURRENT repository state.
+
+IMPORTANT:
+- Do NOT restart the project.
+- Do NOT recreate files that already exist.
+- Do NOT discard or replace working code.
+- First inspect the entire current repository and understand what has already been implemented.
+- The previous Agent session already implemented part of the project before the daily quota reset.
+
+The previous session reported that the following were already implemented or partially implemented:
+
+- API contract and route surface
+- React + Vite + TypeScript frontend foundation
+- PostgreSQL database tables
+- signed session/history handling
+- validated QR image uploads
+- server-side QR decoding
+- QR content classification
+- SSRF-aware URL inspection
+- deterministic risk scoring
+- honest optional AI/threat-intelligence service states
+
+However, these claims must be VERIFIED against the actual code. Do not assume they are complete merely because the previous Agent reported them.
+
+PROJECT GOAL
+
+QRShield AI is a complete AI-powered QR Code Cybersecurity Risk Analyzer for our NeuraX Hackathon 3.0 project under the AI in Cyber Security theme.
+
+The application protects users BEFORE they interact with a QR code.
+
+Core workflow:
+
+QR image
+→ secure upload
+→ QR decoding
+→ content classification
+→ deterministic cybersecurity analysis
+→ risk scoring
+→ optional AI explanation
+→ safety recommendation
+→ database storage
+→ result/history
+
+The project must be a REAL working application, not a UI mockup.
+
+TECH STACK
+
+Frontend:
+- React
+- Vite
+- TypeScript
+- React Router
+- Tailwind CSS
+- TanStack Query if already included and useful
+
+Backend:
+- Express
+- TypeScript
+
+Database:
+- PostgreSQL
+- Drizzle ORM
+
+QR processing:
+- reliable server-side QR decoding/image processing
+
+AI:
+- optional LLM API through environment variables
+
+Threat intelligence:
+- optional integrations only
+
+IMPORTANT MVP PRINCIPLE
+
+The core application MUST work without:
+- an AI API key
+- a threat-intelligence API key
+
+The deterministic security analyzer is the authority for the numeric risk score.
+
+AI must NEVER fabricate findings and must NEVER directly change the deterministic score.
+
+RISK SCORE
+
+Use:
+
+0–19   = Safe
+20–39  = Low
+40–59  = Medium
+60–79  = High
+80–100 = Critical
+
+Every score contribution must be explainable and traceable to an actual detected security signal.
+
+CORE FEATURES THAT MUST EVENTUALLY BE COMPLETE
+
+1. QR image upload
+2. File validation and size limits
+3. Server-side QR decoding
+4. Content classification:
+   - URL
+   - UPI payment
+   - phone
+   - email
+   - plain text
+   - unknown
+5. URL security analysis
+6. Suspicious-domain detection
+7. Typosquatting detection
+8. Brand impersonation detection
+9. Suspicious URL patterns
+10. Redirect analysis with strict limits
+11. SSRF protection
+12. Private/local IP blocking
+13. Request timeouts
+14. Deterministic risk engine
+15. Explainable risk findings
+16. AI-assisted explanation/classification when configured
+17. Context-specific safety recommendations
+18. PostgreSQL scan history
+19. Result page
+20. History page
+21. Settings page
+22. English/Telugu/Hindi UI
+23. Secure handling of untrusted QR contents
+24. Rate limiting
+25. Secure error handling
+26. No secrets exposed to frontend
+27. Automated tests
+28. README and complete local setup instructions
+29. .env.example
+30. Complete end-to-end working flow
+
+CRITICAL SECURITY RULES
+
+QRShield must NEVER automatically navigate to a decoded URL.
+
+Do not:
+- open decoded URLs in the user's browser
+- iframe untrusted URLs
+- execute downloaded content
+- execute JavaScript from decoded content
+- expose server-side access to private/local network targets
+
+Decoded QR content must be treated as untrusted input.
+
+For URL analysis:
+- allow only appropriate URL schemes
+- block localhost/private/link-local/reserved addresses
+- prevent SSRF
+- limit redirects
+- use short request timeouts
+- validate every redirect target
+- handle malformed URLs safely
+
+For uploads:
+- validate MIME type
+- validate file signature where possible
+- enforce file-size limits
+- reject unsupported files
+- do not execute uploaded files
+
+AI and threat-intelligence failures must degrade gracefully.
+
+Do NOT create fake threat-intelligence results.
+
+Do NOT create fake AI results.
+
+If optional services are unavailable, clearly report that they are unavailable and continue with deterministic analysis.
+
+IMPLEMENTATION STRATEGY
+
+First inspect the repository.
+
+Then produce a concise status report containing:
+
+A. Current folder structure
+B. Files already implemented
+C. Features fully implemented
+D. Features partially implemented
+E. Features missing
+F. Current dependencies
+G. Database status
+H. Build status
+I. Test status
+J. Current errors
+K. Exact next milestone
+
+Do NOT make major changes before this inspection.
+
+After the inspection, continue implementation from the FIRST incomplete milestone.
+
+Priority order:
+
+1. Verify/fix existing foundation
+2. Database
+3. QR upload + decoding
+4. Content classification
+5. Deterministic security analyzer
+6. Risk scoring
+7. Result UI
+8. Scan history
+9. AI explanation
+10. Optional threat intelligence
+11. Multilingual UI
+12. Security hardening
+13. Automated tests
+14. Documentation
+15. Final end-to-end verification
+
+For EVERY milestone:
+
+- implement the feature completely
+- run the relevant build
+- run tests
+- fix errors
+- verify integration with the rest of the application
+- do not mark it complete if it is only mocked or visually represented
+
+IMPORTANT:
+Do not spend excessive time on visual polish until the complete scan pipeline works.
+
+The final product must be runnable outside Replit in VS Code on a normal Windows laptop.
+
+Therefore:
+- do not depend on Replit-only services for core functionality
+- include .env.example
+- include README.md
+- include database setup/migration instructions
+- include clear npm scripts
+- include local development instructions
+- keep secrets out of source control
+
+When the complete MVP is finished, perform a final audit covering:
+
+1. End-to-end scan
+2. Safe URL
+3. Suspicious URL
+4. UPI QR
+5. Plain text QR
+6. Invalid image
+7. Malformed QR
+8. SSRF/private IP protection
+9. Redirect handling
+10. Risk score correctness
+11. Database persistence
+12. History retrieval
+13. AI unavailable fallback
+14. Threat intelligence unavailable fallback
+15. English/Telugu/Hindi switching
+16. Frontend production build
+17. Backend build
+18. Automated tests
+19. Security review
+
+Do not stop at a partially working demo.
+
+Continue until the project is genuinely usable end-to-end.

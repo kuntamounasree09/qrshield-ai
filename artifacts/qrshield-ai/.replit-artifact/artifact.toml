@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "QRShield AI"
+description = "A cybersecurity-first QR code analyzer that decodes QR images, classifies their contents, explains observable risk signals, and keeps scan history without opening destinations."
+version = "1.0.0"
+id = "artifacts/qrshield-ai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21141
+
+[services.development]
+run = "pnpm --filter @workspace/qrshield-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/qrshield-ai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/qrshield-ai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21141"
+BASE_PATH = "/"

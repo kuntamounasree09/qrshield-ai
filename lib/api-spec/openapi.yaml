@@ -3,13 +3,17 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: QRShield AI cybersecurity analysis API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: scans
+    description: QR scan and analysis operations
+  - name: settings
+    description: Application preferences
 paths:
   /healthz:
     get:
@@ -24,7 +28,184 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /scans:
+    get:
+      operationId: listScans
+      tags: [scans]
+      summary: List scan history
+      description: Returns the current browser session's QR scan history.
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - name: riskLevel
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/RiskLevel"
+        - name: contentType
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/ContentType"
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 120
+      responses:
+        "200":
+          description: Scan history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanListResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    post:
+      operationId: createScan
+      tags: [scans]
+      summary: Upload and analyze a QR image
+      description: Decodes an uploaded QR image and stores the resulting analysis.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ScanUpload"
+      responses:
+        "201":
+          description: Completed scan analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "413":
+          description: Upload is too large
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /scans/summary:
+    get:
+      operationId: getScanSummary
+      tags: [scans]
+      summary: Get scan dashboard summary
+      description: Returns aggregate scan counts for the current browser session.
+      responses:
+        "200":
+          description: Scan summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanSummary"
+  /scans/{id}:
+    get:
+      operationId: getScan
+      tags: [scans]
+      summary: Get one scan result
+      parameters:
+        - $ref: "#/components/parameters/ScanId"
+      responses:
+        "200":
+          description: Scan result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanResult"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      operationId: deleteScan
+      tags: [scans]
+      summary: Delete one scan result
+      parameters:
+        - $ref: "#/components/parameters/ScanId"
+      responses:
+        "204":
+          description: Scan deleted
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /settings:
+    get:
+      operationId: getSettings
+      tags: [settings]
+      summary: Get analysis preferences
+      responses:
+        "200":
+          description: Current preferences
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppSettings"
+    put:
+      operationId: updateSettings
+      tags: [settings]
+      summary: Update analysis preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SettingsUpdate"
+      responses:
+        "200":
+          description: Updated preferences
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppSettings"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: number
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: number
+        minimum: 1
+        maximum: 50
+        default: 20
+    ScanId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +214,233 @@ components:
           type: string
       required:
         - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
+    ContentType:
+      type: string
+      enum: [url, upi, phone, email, plain_text, unknown]
+    RiskLevel:
+      type: string
+      enum: [safe, low, medium, high, critical]
+    AnalysisStatus:
+      type: string
+      enum: [completed, decode_failed, analysis_failed]
+    Language:
+      type: string
+      enum: [en, te, hi]
+    ScanFinding:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+        scoreContribution:
+          type: number
+          minimum: 0
+          maximum: 100
+        severity:
+          $ref: "#/components/schemas/RiskLevel"
+      required: [code, title, detail, scoreContribution, severity]
+    RedirectAnalysis:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [not_applicable, not_checked, completed, blocked, unavailable]
+        finalUrl:
+          type: ["string", "null"]
+        hops:
+          type: number
+          minimum: 0
+        notes:
+          type: array
+          items:
+            type: string
+      required: [status, finalUrl, hops, notes]
+    ThreatIntelResult:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [not_enabled, unavailable, no_match, match]
+        provider:
+          type: ["string", "null"]
+        verdict:
+          type: ["string", "null"]
+        notes:
+          type: array
+          items:
+            type: string
+      required: [status, provider, verdict, notes]
+    AiAnalysis:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [not_enabled, unavailable, completed]
+        threatCategory:
+          type: ["string", "null"]
+        confidence:
+          type: ["number", "null"]
+          minimum: 0
+          maximum: 1
+        explanation:
+          type: ["string", "null"]
+        evidence:
+          type: array
+          items:
+            type: string
+        limitations:
+          type: array
+          items:
+            type: string
+      required:
+        [status, threatCategory, confidence, explanation, evidence, limitations]
+    Recommendation:
+      type: object
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        actions:
+          type: array
+          items:
+            type: string
+      required: [title, detail, actions]
+    ScanResult:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        createdAt:
+          type: string
+          format: date-time
+        filename:
+          type: ["string", "null"]
+        contentType:
+          $ref: "#/components/schemas/ContentType"
+        decodedContent:
+          type: string
+        normalizedUrl:
+          type: ["string", "null"]
+        riskScore:
+          type: number
+          minimum: 0
+          maximum: 100
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+        analysisStatus:
+          $ref: "#/components/schemas/AnalysisStatus"
+        findings:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScanFinding"
+        redirectAnalysis:
+          $ref: "#/components/schemas/RedirectAnalysis"
+        threatIntel:
+          $ref: "#/components/schemas/ThreatIntelResult"
+        aiAnalysis:
+          $ref: "#/components/schemas/AiAnalysis"
+        recommendation:
+          $ref: "#/components/schemas/Recommendation"
+      required:
+        - id
+        - createdAt
+        - filename
+        - contentType
+        - decodedContent
+        - normalizedUrl
+        - riskScore
+        - riskLevel
+        - analysisStatus
+        - findings
+        - redirectAnalysis
+        - threatIntel
+        - aiAnalysis
+        - recommendation
+    ScanListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        createdAt:
+          type: string
+          format: date-time
+        contentType:
+          $ref: "#/components/schemas/ContentType"
+        preview:
+          type: string
+        riskScore:
+          type: number
+          minimum: 0
+          maximum: 100
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+      required: [id, createdAt, contentType, preview, riskScore, riskLevel]
+    ScanListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScanListItem"
+        page:
+          type: number
+        pageSize:
+          type: number
+        total:
+          type: number
+      required: [items, page, pageSize, total]
+    ScanSummary:
+      type: object
+      properties:
+        totalScans:
+          type: number
+        highRiskScans:
+          type: number
+        safeScans:
+          type: number
+        lastScanAt:
+          type: ["string", "null"]
+      required: [totalScans, highRiskScans, safeScans, lastScanAt]
+    ScanUpload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+      required: [file]
+    AppSettings:
+      type: object
+      properties:
+        language:
+          $ref: "#/components/schemas/Language"
+        aiEnabled:
+          type: boolean
+        redirectAnalysisEnabled:
+          type: boolean
+        threatIntelEnabled:
+          type: boolean
+      required: [language, aiEnabled, redirectAnalysisEnabled, threatIntelEnabled]
+    SettingsUpdate:
+      type: object
+      properties:
+        language:
+          $ref: "#/components/schemas/Language"
+        aiEnabled:
+          type: boolean
+        redirectAnalysisEnabled:
+          type: boolean
+        threatIntelEnabled:
+          type: boolean
 
