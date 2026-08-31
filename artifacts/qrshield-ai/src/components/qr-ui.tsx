@@ -1,12 +1,14 @@
 import { AlertCircle, ArrowUpRight, Check, CircleHelp, ExternalLink, Info, Minus, ShieldAlert, ShieldCheck, Sparkles, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { RiskLevel } from '@workspace/api-client-react';
+import { useLanguage } from '@/lib/i18n';
 
 export function SectionEyebrow({ children }: { children: ReactNode }) {
   return <p className="font-mono-ui text-[10px] font-medium uppercase tracking-[.2em] text-[hsl(var(--primary))]">{children}</p>;
 }
 
 export function RiskBadge({ level, score }: { level: RiskLevel; score?: number }) {
+  const { riskLabel } = useLanguage();
   const styles: Record<RiskLevel, string> = {
     safe: 'bg-[hsl(var(--primary)/.11)] text-[hsl(var(--primary))] border-[hsl(var(--primary)/.22)]',
     low: 'bg-[hsl(171_30%_90%)] text-[hsl(171_44%_28%)] border-[hsl(171_30%_78%)]',
@@ -14,10 +16,11 @@ export function RiskBadge({ level, score }: { level: RiskLevel; score?: number }
     high: 'bg-[hsl(var(--destructive)/.12)] text-[hsl(var(--destructive))] border-[hsl(var(--destructive)/.28)]',
     critical: 'bg-[hsl(var(--destructive)/.18)] text-[hsl(var(--destructive))] border-[hsl(var(--destructive)/.38)]',
   };
-  return <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono-ui text-[10px] uppercase tracking-[.12em] ${styles[level]}`} data-testid={`status-risk-${level}`}><span className="size-1.5 rounded-full bg-current" />{score !== undefined ? `${score} · ` : ''}{level}</span>;
+  return <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono-ui text-[10px] uppercase tracking-[.12em] ${styles[level]}`} data-testid={`status-risk-${level}`}><span className="size-1.5 rounded-full bg-current" />{score !== undefined ? `${score} · ` : ''}{riskLabel(level)}</span>;
 }
 
 export function ScoreRing({ score, level, size = 'lg' }: { score: number; level: RiskLevel; size?: 'sm' | 'lg' }) {
+  const { t } = useLanguage();
   const tone = level === 'safe' || level === 'low' ? 'hsl(var(--primary))' : level === 'medium' ? 'hsl(var(--accent))' : 'hsl(var(--destructive))';
   const radius = size === 'lg' ? 49 : 34;
   const circumference = 2 * Math.PI * radius;
@@ -29,7 +32,7 @@ export function ScoreRing({ score, level, size = 'lg' }: { score: number; level:
     </svg>
     <div className="absolute inset-0 flex flex-col items-center justify-center">
       <strong className={`${size === 'lg' ? 'text-4xl' : 'text-2xl'} font-semibold tracking-[-.06em]`}>{score}</strong>
-      <span className="font-mono-ui text-[9px] uppercase tracking-[.12em] text-muted-foreground">risk score</span>
+       <span className="font-mono-ui text-[9px] uppercase tracking-[.12em] text-muted-foreground">{t('riskScore')}</span>
     </div>
   </div>;
 }
@@ -54,18 +57,21 @@ export function EmptyState({ title, detail, action }: { title: string; detail: s
   </div>;
 }
 
-export function ErrorState({ onRetry, detail = 'We could not retrieve this view.' }: { onRetry?: () => void; detail?: string }) {
+export function ErrorState({ onRetry, detail }: { onRetry?: () => void; detail?: string }) {
+  const { t } = useLanguage();
   return <div className="flex flex-col items-center rounded-2xl border border-[hsl(var(--destructive)/.24)] bg-[hsl(var(--destructive)/.05)] px-6 py-14 text-center" data-testid="state-error">
-    <AlertCircle className="mb-3 text-[hsl(var(--destructive))]" size={26} /><h2 className="font-display text-2xl">A quiet interruption</h2><p className="mt-2 text-[13px] text-muted-foreground">{detail}</p>{onRetry && <button type="button" onClick={onRetry} className="mt-5 rounded-xl border border-border bg-card px-4 py-2 text-[12px] font-semibold hover-elevate" data-testid="button-retry">Try again</button>}
+    <AlertCircle className="mb-3 text-[hsl(var(--destructive))]" size={26} /><h2 className="font-display text-2xl">{t('aQuietInterruption')}</h2><p className="mt-2 text-[13px] text-muted-foreground">{detail ?? t('viewUnavailable')}</p>{onRetry && <button type="button" onClick={onRetry} className="mt-5 rounded-xl border border-border bg-card px-4 py-2 text-[12px] font-semibold hover-elevate" data-testid="button-retry">{t('tryAgain')}</button>}
   </div>;
 }
 
 export function SkeletonBlock({ className = '' }: { className?: string }) {
-  return <div className={`animate-pulse rounded-lg bg-[hsl(var(--muted))] ${className}`} aria-label="Loading" data-testid="state-loading" />;
+  const { t } = useLanguage();
+  return <div className={`animate-pulse rounded-lg bg-[hsl(var(--muted))] ${className}`} aria-label={t('loading')} data-testid="state-loading" />;
 }
 
 export function SafeDestination({ value }: { value: string }) {
-  return <div className="flex items-start gap-3 rounded-xl border border-border bg-[hsl(var(--muted)/.46)] p-3"><div className="mt-0.5 rounded-lg bg-card p-2 text-muted-foreground"><ExternalLink size={14} /></div><div className="min-w-0"><p className="font-mono-ui text-[10px] uppercase tracking-[.15em] text-muted-foreground">Decoded destination · not opened</p><p className="mt-1 break-all font-mono-ui text-[12px] leading-relaxed text-foreground" data-testid="text-decoded-content">{value}</p></div></div>;
+  const { t } = useLanguage();
+  return <div className="flex items-start gap-3 rounded-xl border border-border bg-[hsl(var(--muted)/.46)] p-3"><div className="mt-0.5 rounded-lg bg-card p-2 text-muted-foreground"><ExternalLink size={14} /></div><div className="min-w-0"><p className="font-mono-ui text-[10px] uppercase tracking-[.15em] text-muted-foreground">{t('decodedDestination')}</p><p className="mt-1 break-all font-mono-ui text-[12px] leading-relaxed text-foreground" data-testid="text-decoded-content">{value}</p></div></div>;
 }
 
 export function ArrowLink({ href, children }: { href: string; children: ReactNode }) {

@@ -23,13 +23,13 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link to="/" className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--sidebar-ring))]" data-testid="link-brand">
             <BrandMark />
           </Link>
-          <button type="button" className="rounded-lg p-2 text-[hsl(var(--sidebar-foreground)/.65)] hover:bg-[hsl(var(--sidebar-accent))] md:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation" data-testid="button-close-navigation">
+           <button type="button" className="rounded-lg p-2 text-[hsl(var(--sidebar-foreground)/.65)] hover:bg-[hsl(var(--sidebar-accent))] md:hidden" onClick={() => setMobileOpen(false)} aria-label={t('closeNavigation')} data-testid="button-close-navigation">
             <X size={18} />
           </button>
         </div>
         <div className="mt-12">
           <p className="mb-3 px-3 font-mono-ui text-[9px] uppercase tracking-[.22em] text-[hsl(var(--sidebar-foreground)/.42)]">{t('workspace')}</p>
-          <nav className="space-y-1" aria-label="Primary navigation">
+           <nav className="space-y-1" aria-label={t('primaryNavigation')}>
             {links.map(({ href, labelKey, icon: Icon }) => {
               const active = href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
               return (
@@ -51,11 +51,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <p className="mt-5 px-1 font-mono-ui text-[9px] tracking-[.08em] text-[hsl(var(--sidebar-foreground)/.34)]">v1.0 · observation over assumption</p>
       </aside>
-      {mobileOpen && <button type="button" aria-label="Close navigation overlay" className="fixed inset-0 z-20 bg-[hsl(var(--foreground)/.24)] md:hidden" onClick={() => setMobileOpen(false)} data-testid="button-navigation-overlay" />}
+      {mobileOpen && <button type="button" aria-label={t('closeNavigationOverlay')} className="fixed inset-0 z-20 bg-[hsl(var(--foreground)/.24)] md:hidden" onClick={() => setMobileOpen(false)} data-testid="button-navigation-overlay" />}
       <main className="min-w-0 flex-1">
         <header className="flex h-[72px] items-center justify-between border-b border-border/70 px-5 md:hidden">
           <Link to="/" data-testid="link-mobile-brand"><BrandMark compact /></Link>
-          <button type="button" className="rounded-xl border border-border bg-card p-2.5 text-muted-foreground" onClick={() => setMobileOpen(true)} aria-label="Open navigation" data-testid="button-open-navigation"><Menu size={19} /></button>
+           <button type="button" className="rounded-xl border border-border bg-card p-2.5 text-muted-foreground" onClick={() => setMobileOpen(true)} aria-label={t('openNavigation')} data-testid="button-open-navigation"><Menu size={19} /></button>
         </header>
         <div className="mx-auto w-full max-w-[1360px] px-5 py-7 md:px-10 md:py-10 lg:px-14">{children}</div>
       </main>

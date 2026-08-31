@@ -1,0 +1,121 @@
+QRShield AI is very close to final completion.
+
+Do NOT rebuild or replace the existing working implementation.
+
+The previous implementation reports:
+- 26 automated tests passing
+- frontend build passing
+- backend build passing
+- real PNG QR decoding passing
+- PostgreSQL persistence passing
+- health/summary endpoints passing
+- security protections implemented
+- React Router frontend working
+- English/Hindi/Telugu navigation and settings working
+
+Before final delivery, complete the remaining multilingual requirement.
+
+CURRENT GAP:
+The persisted language setting currently translates navigation/settings UI, but longer scan/report content and technical findings remain English.
+
+I want the multilingual requirement completed properly.
+
+Implement English, Telugu, and Hindi translations for all USER-VISIBLE static application text, including:
+
+1. Landing page
+2. Scan page
+3. Upload instructions
+4. Scan progress/status messages
+5. Result page
+6. Risk level labels
+7. Security finding titles
+8. Security finding explanations
+9. Safety recommendations
+10. AI explanation labels
+11. Threat intelligence status messages
+12. Error messages
+13. History page
+14. Empty states
+15. Delete confirmation/messages
+16. Settings page
+17. Language selector
+18. Buttons
+19. Navigation
+20. Help/instruction text
+
+IMPORTANT:
+
+- Do not translate raw decoded QR content.
+- Do not translate URLs, domains, email addresses, UPI IDs, or technical evidence values.
+- Do not change the authoritative deterministic risk score because of translation.
+- Do not create fake translations dynamically through an LLM.
+- Use a proper static translation dictionary/translation system.
+- Preserve the existing English version as the source language.
+- Telugu and Hindi should use natural, understandable wording suitable for general users.
+- Make sure changing the language actually updates the visible application without requiring a page reload where practical.
+- Persist the selected language using the existing settings mechanism.
+
+After implementing this:
+
+1. Run frontend typecheck.
+2. Run backend typecheck.
+3. Run all automated tests.
+4. Run frontend production build.
+5. Run backend production build.
+6. Check the live preview for browser errors.
+7. Verify language switching on:
+   - Scan
+   - Result
+   - History
+   - Settings
+
+Then perform a FINAL PROJECT AUDIT.
+
+Verify these real workflows:
+
+A. Valid safe QR
+B. Suspicious URL QR
+C. UPI QR
+D. Phone QR
+E. Email QR
+F. Plain text QR
+G. Unknown/unsupported QR
+H. Invalid image upload
+I. Oversized/unsupported upload
+J. Malformed URL
+K. Private/local destination
+L. Redirect chain
+M. Typosquatting
+N. Punycode/Unicode domain
+O. Suspicious URL patterns
+P. Database persistence
+Q. History retrieval
+R. Scan deletion
+S. Settings persistence
+T. English/Hindi/Telugu switching
+U. AI unavailable fallback
+V. Threat-intelligence unavailable fallback
+W. Rate limiting
+X. SSRF protection
+
+Do not fabricate successful results.
+
+Do not mark a feature complete unless it is actually implemented and tested.
+
+Finally provide a concise FINAL DELIVERY REPORT containing:
+
+1. Complete feature list
+2. Remaining limitations, if any
+3. Test count and result
+4. Frontend build result
+5. Backend build result
+6. Database status
+7. Security checks performed
+8. Multilingual status
+9. Exact steps required to run the project locally in VS Code
+10. Required environment variables
+11. Whether the project is ready to export from Replit
+
+Do not add unnecessary new features.
+
+The goal is now STABILITY + COMPLETENESS, not expanding the scope.
